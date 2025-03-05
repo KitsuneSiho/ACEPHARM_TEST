@@ -1,0 +1,10 @@
+#root {
+  width: 1800px;
+  height: 920px;
+  margin: auto auto;
+  margin-top: 1rem;
+  padding: 2rem;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius:20px;
+}

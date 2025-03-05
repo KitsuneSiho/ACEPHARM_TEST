@@ -1,0 +1,23 @@
+.company-logo{
+    text-align: left;
+    margin-top: 2rem;
+    padding-top: 2px;
+}
+
+.page-container{
+    max-width: 1800px;
+    height: 600px;
+    margin-top: 10 rem;
+    background-color: rgb(196, 220, 255);
+    border-radius: 15px;
+    box-shadow: 0px 10px 10px rgb(187, 187, 187);
+
+}
+
+.page-header{
+    padding-top: 1rem;
+    margin-top: 3rem;
+    text-align: center;
+    text-decoration: dashed;
+
+}
