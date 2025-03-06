@@ -6,7 +6,7 @@ const Notice = () => {
         
         <div className="page-container">
             <h2 className="page-header">공지사항</h2>
-            <hr></hr>
+            <hr className="page-headerLine"></hr>
             <p>공지 내용 들어갈 곳 입니다.</p>
         </div>
     )

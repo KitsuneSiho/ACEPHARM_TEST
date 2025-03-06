@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import Home from '../pages/Home';
 import Notice from '../pages/Notice';
 import OrderList from '../pages/OrderList';
+import LoginForm from '../pages/LoginForm';
 
 
 function AppRoute() { 
@@ -14,6 +15,7 @@ function AppRoute() {
                 <Route path="/" element={<Home/>} /> {/* 홈 기본 경로 */}
                 <Route path="/notice" element={<Notice/>} />
                 <Route path="/orderList" element={<OrderList/>} />
+                <Route path="/loginForm" element={<LoginForm/>} />
                 <Route path="*" element={<NotFound404 />}/>  {/* 없는 페이지 처리*/}
                 </Route>
             </Routes>

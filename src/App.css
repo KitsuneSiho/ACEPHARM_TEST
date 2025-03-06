@@ -1,3 +1,14 @@
+/* #root {
+  width: 1800px;
+  height: 920px;
+  margin: auto auto;
+  margin-top: 1rem;
+  padding: 2rem;
+  text-align: center;
+  background-color: #00ff37;
+  border-radius:20px;
+} */
+
 #root {
   width: 1800px;
   height: 920px;
@@ -5,6 +16,10 @@
   margin-top: 1rem;
   padding: 2rem;
   text-align: center;
-  background-color: #ffffff;
-  border-radius:20px;
+  background-color: #00ff37;
+  border-radius: 20px;
+  background-image: url('./assets/pill-background.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }

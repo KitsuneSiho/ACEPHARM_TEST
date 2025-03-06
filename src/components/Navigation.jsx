@@ -21,9 +21,8 @@ function Navigation() {
         isActive ? "nav-link custom-nav-link active" : "nav-link custom-nav-link"
           }>주문하기</NavLink>
         </Nav>
-
         <Nav>
-          <Nav.Link as={Link} to="login" className="custom-nav-link">로그인</Nav.Link>
+          <Nav.Link as={Link} to="loginForm" className="custom-nav-link">로그인</Nav.Link>
         </Nav>
         </Navbar.Collapse>
       </Container>
