@@ -14,17 +14,17 @@ function Navigation() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
         <Nav className="me-auto">
-  <NavLink to="notice" className={({ isActive }) => 
-    isActive ? "nav-link custom-nav-link active" : "nav-link custom-nav-link"
-  }>공지사항</NavLink>
-  <NavLink to="orderList" className={({ isActive }) => 
-    isActive ? "nav-link custom-nav-link active" : "nav-link custom-nav-link"
-  }>주문하기</NavLink>
-</Nav>
+        <NavLink to="notice" className={({ isActive }) => 
+        isActive ? "nav-link custom-nav-link active" : "nav-link custom-nav-link"
+          }>공지사항</NavLink>
+        <NavLink to="orderList" className={({ isActive }) => 
+        isActive ? "nav-link custom-nav-link active" : "nav-link custom-nav-link"
+          }>주문하기</NavLink>
+        </Nav>
 
-          <Nav>
-            <Nav.Link as={Link} to="login" className="custom-nav-link">로그인</Nav.Link>
-          </Nav>
+        <Nav>
+          <Nav.Link as={Link} to="login" className="custom-nav-link">로그인</Nav.Link>
+        </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
