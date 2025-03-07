@@ -26,7 +26,7 @@ function AppRoute() {
 function NotFound404(){
     return (
         <div style={{ textAlign: 'center', marginTop: '50px'}}>
-            <h2>404 - 페이지를 찾을 수 업습니다.</h2>
+            <h2>404 - 페이지를 찾을 수 없습니다.</h2>
             <p>잘못된 접근이거나 URL이 잘못 되었습니다.</p>
             <Link to="/">
             <button>메인으로 이동</button>

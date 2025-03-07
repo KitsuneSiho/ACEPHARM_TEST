@@ -13,12 +13,10 @@
   width: 1800px;
   height: 920px;
   margin: auto auto;
-  margin-top: 1rem;
   padding: 2rem;
   text-align: center;
-  background-color: #00ff37;
+  background-color: #00000000;
   border-radius: 20px;
-  background-image: url('./assets/pill-background.jpg');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
