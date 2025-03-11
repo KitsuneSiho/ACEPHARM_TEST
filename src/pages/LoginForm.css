@@ -1,0 +1,30 @@
+.login-box{
+    min-width: 480px;
+    width: 100%;
+    text-align: left;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    border-radius: 15px;
+}
+
+.password-container {
+    position: relative;
+  }
+  
+  .password-toggle {
+    position: absolute;
+    right: 10px;  /* 오른쪽 여백 */
+    top: 50%;     /* 세로 중앙 정렬 */
+    transform: translateY(-50%);  /* 정확한 중앙 정렬 */
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .password-toggle svg {
+    font-size: 1.25rem;  /* 아이콘 크기 조정 */
+  }
+  
+  

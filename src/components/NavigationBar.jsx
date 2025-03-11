@@ -56,7 +56,7 @@ const NavigationBar = () => {
             <Nav.Link as={NavLink} to="/wishList" className="custom-nav-link">장바구니</Nav.Link>
           </Nav>
           <Nav className="ms-auto"> {/* 오른쪽 정렬 */}
-            <Nav.Link as={NavLink} to="/login" className="custom-nav-link">Login</Nav.Link>
+            <Nav.Link as={NavLink} to="/loginForm" className="custom-nav-link">Login</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
