@@ -1,5 +1,5 @@
 .register-box {
-  text-align: left;
+  min-width: 480px;
   width: 100%;
   max-width: 600px;
   background-color: #ffffff;

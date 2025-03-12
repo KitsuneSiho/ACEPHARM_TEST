@@ -14,14 +14,14 @@ const RegisterForm = () => {
     agreePrivacy: false,
     
     // 회원 정보
-    username: "",
-    password: "",
+    username: "",// 유저아이디
+    password: "",// 비밀번호
     passwordConfirm: "",
-    representativeName: "",
-    businessNumber: "",
-    companyName: "",
+    representativeName: "",// 대표자명
+    businessNumber: "",//사업자번호
+    companyName: "",// 회사이름
     memberType: "", // 약국, 도매, 병원 중 선택
-    address: "",
+    address: "",//주소
     phone: "",
     fax: "",
     email: ""

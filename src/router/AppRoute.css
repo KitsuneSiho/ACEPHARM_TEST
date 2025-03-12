@@ -1,5 +1,6 @@
 .error-container {
     text-align: center;
+    min-width: 480px;
     max-width: 1200px; /* 최대 너비 1200px */
     min-height: 280px; /* 최소 높이 500px */
     max-height: 2500px; /* 최대 높이 2500px */

@@ -78,17 +78,21 @@
 .intro-text p {
   opacity: 0;
   transform: translateY(15px);
-  transition: opacity 0.5s ease-out 0.4s, transform 0.5s ease-out 0.6s; /* 0.4초 지연 */
+  transition: opacity 0.5s ease-out 0.4s, transform 0.5s ease-out 0.4s; /* 기본 지연 */
   font-size: 1.1rem; /* 텍스트 크기 조정 */
   line-height: 1.6; /* 줄 간격 조정으로 가독성 향상 */
   margin-bottom: 1.5rem; /* 문단 간 여백 */
 }
-.intro-text p:nth-child(2) {
-  transition: opacity 0.5s ease-out 0.6s, transform 0.5s ease-out 0.8s; /* 두 번째 문단 지연 */
+.intro-text p:nth-of-type(1) {
+  transition: opacity 0.5s ease-out 0.4s, transform 0.5s ease-out 0.4s; /* 첫 번째 문단 지연 */
 }
-.intro-text p:nth-child(3) {
-  transition: opacity 0.5s ease-out 0.8s, transform 0.5s ease-out 0.4s; /* 세 번째 문단 지연 */
+.intro-text p:nth-of-type(2) {
+  transition: opacity 0.5s ease-out 0.6s, transform 0.5s ease-out 0.6s; /* 두 번째 문단 지연 */
 }
+.intro-text p:nth-of-type(3) {
+  transition: opacity 0.5s ease-out 0.8s, transform 0.5s ease-out 0.8s; /* 세 번째 문단 지연 */
+}
+
 
 /* 이거 수정해야함 */
 
