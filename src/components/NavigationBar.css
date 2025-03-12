@@ -8,7 +8,9 @@
     padding-right: 15px;
     margin-left: auto;
     margin-right: auto;   
-    box-shadow: 12px 15px 7px 0px rgba(0,0,0,0.1);
+    /* box-shadow: 12px 15px 7px 0px rgba(0,0,0,0.1); */
+    box-shadow: -10px -10px 15px rgba(233, 243, 255, 0.363),
+                10px 10px 15px rgba(0, 0, 0, 0.308);
 }
 .nav-bar-container img {
     display: block; /* 로고를 블록 요소로 설정 */

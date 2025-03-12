@@ -12,12 +12,12 @@ const LoginForm = () => {
 
   return (
     <div className="page-container">
-      <div className="login-box">
-        <h2 className="text-left mb-4">LOGIN</h2>
+        <h2 className="login-header mb-4">LOGIN</h2>
+        <div className="login-box">
         <Form>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>아이디</Form.Label>
-            <Form.Control type="email" placeholder="아이디를 입력해주세요." />
+            <Form.Control type="text" placeholder="아이디를 입력해주세요." />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -32,7 +32,7 @@ const LoginForm = () => {
                 className="password-toggle"
                 onClick={togglePassword}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}  {/* 아이콘 변경 */}
+                {showPassword ? <FaEye /> : <FaEyeSlash />}  {/* 아이콘 변경 */}
               </button>
             </div>
           </Form.Group>

@@ -4,11 +4,20 @@
   max-height: 2500px; /* 최대 높이 2500px */
   margin: 0 auto; /* 가운데 정렬 */
   padding: 20px; /* 내부 여백 */
-  background-color: #d5e1ec; /* 짙은 회색 배경 */
+  background-color: #a0aabd; /* 짙은 회색 배경 */
   border-radius: 10px; /* 모서리 둥글게 */
-  /* box-shadow: 0 0 10px rgba(0,0,0,0.2); /* 그림자 추가 */
+  /* box-shadow: 12px 15px 7px 0px rgba(0,0,0,0.1); 그림자 추가 */
+  box-shadow: -10px -10px 15px rgba(233, 243, 255, 0.363),
+                10px 10px 15px rgba(0, 0, 0, 0.308);
   margin-top: 2rem;
   margin-bottom: 2rem;
+
+  /* Flexbox 속성 추가 */
+  display: flex;
+  /* 가로 중앙 정렬 */
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
 } 
 
 .page-header {
