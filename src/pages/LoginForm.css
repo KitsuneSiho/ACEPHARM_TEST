@@ -41,3 +41,18 @@ h2.login-header {
 .password-toggle svg {
   font-size: 1.25rem;  /* 아이콘 크기 조정 */
 }
+
+.password-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-color: rgb(230, 230, 230);
+}
+
+/* 유효성 검사 오류 메시지가 표시될 때 InputGroup 스타일 조정 */
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+}
