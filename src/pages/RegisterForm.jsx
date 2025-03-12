@@ -1,203 +1,421 @@
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Form, Button, Card, ProgressBar } from "react-bootstrap";
+import { motion, AnimatePresence } from "framer-motion";
+import "./RegisterForm.css";
 
-// 이거 걍 리액트훅으로 처리해야할듯듯
-const Register = () => {
+const RegisterForm = () => {
+  // 현재 단계 상태 (1: 약관 동의, 2: 회원 정보 입력)
+  const [step, setStep] = useState(1);
+  
+  // 폼 데이터 상태
   const [formData, setFormData] = useState({
-    userId: "",
-    // userName: "",
-    // userEmail: "",
-    userPassword: "",
-
-    companyCEO: "",
-    companyBRN: "",
+    // 약관 동의
+    agreeTerms: false,
+    agreePrivacy: false,
+    
+    // 회원 정보
+    username: "",
+    password: "",
+    passwordConfirm: "",
+    representativeName: "",
+    businessNumber: "",
     companyName: "",
-    companyType: "",
-    companyAddr: "",
-    companyContact: "",
-    companyFax: "",
-    companyEmail: ""
-
+    memberType: "", // 약국, 도매, 병원 중 선택
+    address: "",
+    phone: "",
+    fax: "",
+    email: ""
   });
-
-  const [passwordStrength, setPasswordStrength] = useState({ color: "", text: "" });
-  const [errors, setErrors] = useState({ userId: "", userName: "", userEmail: "", userPassword: "" });
-
-  const navigate = useNavigate();
-
-  // 비밀번호 강도 평가 함수
-  const evaluatePasswordStrength = (userPassword) => {
-    if (userPassword.length <= 4) {
-      setPasswordStrength({ color: "red", text: "위험" });
-    } else if (userPassword.length <= 8) {
-      setPasswordStrength({ color: "orange", text: "보통" });
-    } else if (userPassword.length < 13) {
-      setPasswordStrength({ color: "green", text: "안전" });
-    } else {
-      setPasswordStrength({ color: "skyblue", text: "매우안전" });
-    }
-  };
-
-  // 입력값 유효성 검사 함수
-  const validateInput = (name, value) => {
-    if (name === "userId") {
-      const userIdRegex = /^[A-Za-z0-9]+$/;
-      return userIdRegex.test(value) ? "" : "아이디는 영문자와 숫자만 사용할 수 있습니다.";
-    }
-    if (name === "userName") {
-      const userNameRegex = /^[가-힣A-Za-z0-9]+$/;
-      return userNameRegex.test(value) ? "" : "닉네임은 한글, 영문자, 숫자만 사용할 수 있습니다.";
-    }
-    if (name === "userPassword") {
-      return value.length >= 8 ? "" : "비밀번호는 8자리 이상이어야 합니다.";
-    }
-    return "";
-  };
-
+  
+  // 유효성 검사 오류
+  const [errors, setErrors] = useState({});
+  
+  // 컨테이너 높이 관리를 위한 ref와 상태
+  const containerRef = useRef(null);
+  const [containerHeight, setContainerHeight] = useState("auto");
+  
   // 입력값 변경 핸들러
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "userPassword") {
-      evaluatePasswordStrength(value);
+    const { name, value, type, checked } = e.target;
+    const newFormData = {
+      ...formData,
+      [name]: type === "checkbox" ? checked : value
+    };
+    
+    setFormData(newFormData);
+    console.log("폼 데이터 업데이트:", newFormData);
+    
+    // 오류 메시지 초기화
+    if (!!errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: null
+      });
     }
-
-    // 입력값 유효성 검사 및 에러 설정
-    const errorMessage = validateInput(name, value);
-    setErrors((prev) => ({ ...prev, [name]: errorMessage }));
   };
-
-  // 폼 제출 핸들러
-  const handleSubmit = async (e) => {
+  
+  // 다음 단계로 이동
+  const handleNextStep = () => {
+    // 약관 동의 단계 유효성 검사
+    if (step === 1) {
+      const newErrors = {};
+      
+      if (!formData.agreeTerms) {
+        newErrors.agreeTerms = "이용약관에 동의해주세요.";
+      }
+      
+      if (!formData.agreePrivacy) {
+        newErrors.agreePrivacy = "개인정보 수집 및 이용에 동의해주세요.";
+      }
+      
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        console.log("유효성 검사 오류:", newErrors);
+        return;
+      }
+      
+      console.log("약관 동의 완료, 다음 단계로 이동");
+      setStep(2);
+    }
+  };
+  
+  // 이전 단계로 이동
+  const handlePrevStep = () => {
+    console.log("이전 단계로 이동");
+    setStep(1);
+  };
+  
+  // 회원가입 제출
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // 입력값 유효성 검사
+    
+    // 회원 정보 입력 단계 유효성 검사
     const newErrors = {};
-    if (!formData.userId) newErrors.userId = "아이디를 입력해주세요.";
-    else newErrors.userId = validateInput("userId", formData.userId);
-
-    if (!formData.userName) newErrors.userName = "닉네임을 입력해주세요.";
-    else newErrors.userName = validateInput("userName", formData.userName);
-
-    if (!formData.userEmail) newErrors.userEmail = "이메일을 입력해주세요.";
-    if (!formData.userPassword) newErrors.userPassword = "비밀번호를 입력해주세요.";
-    else newErrors.userPassword = validateInput("userPassword", formData.userPassword);
-
-    // 에러가 있으면 상태 업데이트 후 함수 종료
-    if (Object.values(newErrors).some((error) => error)) {
+    
+    // 아이디 검사
+    if (!formData.username) {
+      newErrors.username = "아이디를 입력해주세요.";
+    }
+    
+    // 비밀번호 검사
+    if (!formData.password) {
+      newErrors.password = "비밀번호를 입력해주세요.";
+    }
+    
+    // 비밀번호 확인 검사
+    if (formData.password !== formData.passwordConfirm) {
+      newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
+    }
+    
+    // 대표자명 검사
+    if (!formData.representativeName) {
+      newErrors.representativeName = "대표자명을 입력해주세요.";
+    }
+    
+    // 사업자번호 검사
+    if (!formData.businessNumber) {
+      newErrors.businessNumber = "사업자번호를 입력해주세요.";
+    }
+    
+    // 회사명 검사
+    if (!formData.companyName) {
+      newErrors.companyName = "회사명을 입력해주세요.";
+    }
+    
+    // 회원구분 검사
+    if (!formData.memberType) {
+      newErrors.memberType = "회원구분을 선택해주세요.";
+    }
+    
+    // 주소 검사
+    if (!formData.address) {
+      newErrors.address = "주소를 입력해주세요.";
+    }
+    
+    // 전화번호 검사
+    if (!formData.phone) {
+      newErrors.phone = "전화번호를 입력해주세요.";
+    }
+    
+    // 이메일 검사
+    if (!formData.email) {
+      newErrors.email = "이메일을 입력해주세요.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "유효한 이메일 주소를 입력해주세요.";
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      console.log("유효성 검사 오류:", newErrors);
       return;
     }
-
-    try {
-      const response = await fetch("http://localhost:8080/registeForm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert("회원가입이 완료되었습니다!");
-        navigate("/login");
-      } else {
-        const errorMessage = await response.text();
-
-        if (errorMessage === "already_userid") {
-          setErrors((prev) => ({ ...prev, userId: "이미 사용된 아이디입니다." }));
-        } else if (errorMessage === "already_useremail") {
-          setErrors((prev) => ({ ...prev, userEmail: "이미 사용된 이메일입니다." }));
-        } else if (errorMessage === "already_username") {
-          setErrors((prev) => ({ ...prev, userName: "이미 사용된 이름입니다." }));
-        }
-      }
-    } catch (error) {
-      console.error("회원가입 요청 중 오류 발생:", error);
-      alert("서버와 통신 중 오류가 발생했습니다.");
-    }
+    
+    // 회원가입 요청 처리
+    console.log("회원가입 데이터:", formData);
+    // 여기에 API 호출 로직 추가
   };
-
-  return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-      <Card style={{ width: "30rem", padding: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-        <h2 className="text-center mb-4">회원가입 페이지</h2>
-        <Form onSubmit={handleSubmit}>
-          {/* 아이디 입력 */}
-          <Form.Group className="mb-3">
-            <Form.Label>아이디</Form.Label>
-            <Form.Control
-              type="text"
-              name="userId"
-              placeholder="아이디를 입력하세요"
-              value={formData.userId}
-              onChange={handleChange}
-              isInvalid={!!errors.userId}
-            />
-            <Form.Control.Feedback type="invalid">{errors.userId}</Form.Control.Feedback>
-          </Form.Group>
-
-          {/* 닉네임 입력 */}
-          <Form.Group className="mb-3">
-            <Form.Label>닉네임</Form.Label>
-            <Form.Control
-              type="text"
-              name="userName"
-              placeholder="닉네임을 입력하세요"
-              value={formData.userName}
-              onChange={handleChange}
-              isInvalid={!!errors.userName}
-            />
-            <Form.Control.Feedback type="invalid">{errors.userName}</Form.Control.Feedback>
-          </Form.Group>
-
-          {/* 이메일 입력 */}
-          <Form.Group className="mb-3">
-            <Form.Label>이메일</Form.Label>
-            <Form.Control
-              type="email"
-              name="userEmail"
-              placeholder="이메일을 입력하세요."
-              value={formData.userEmail}
-              onChange={handleChange}
-              isInvalid={!!errors.userEmail}
-            />
-            <Form.Control.Feedback type="invalid">{errors.userEmail}</Form.Control.Feedback>
-          </Form.Group>
-
-          {/* 비밀번호 입력 */}
-          <Form.Group className="mb-3">
-            <Form.Label>비밀번호</Form.Label>
-            <Form.Control
-              type="password"
-              name="userPassword"
-              placeholder="비밀번호를 입력하세요"
-              value={formData.userPassword}
-              onChange={handleChange}
-              isInvalid={!!errors.userPassword}
-            />
-            <Form.Control.Feedback type="invalid">{errors.userPassword}</Form.Control.Feedback>
-            {/* 비밀번호 강도 표시 */}
-            {formData.userPassword && !errors.userPassword && (
-              <>
-                <div style={{ height: "5px", marginTop: "5px", backgroundColor: passwordStrength.color }}></div>
-                <small style={{ color: passwordStrength.color }}>{passwordStrength.text}</small>
-              </>
-            )}
-          </Form.Group>
-
-          {/* 회원가입 버튼 */}
-          <Button variant="primary" type="submit" className="w-100 mt-3">
+  
+  // 약관 동의 단계 렌더링
+  const renderAgreementStep = () => {
+    return (
+      <>
+        <h3 className="mb-4">약관 동의</h3>
+        
+        <Form.Group className="mb-3">
+          <Form.Check
+            type="checkbox"
+            id="agreeTerms"
+            name="agreeTerms"
+            label="이용약관에 동의합니다."
+            checked={formData.agreeTerms}
+            onChange={handleChange}
+            isInvalid={!!errors.agreeTerms}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.agreeTerms}
+          </Form.Control.Feedback>
+          <div className="terms-box mt-2 mb-3">
+            <p>이용약관 내용...</p>
+          </div>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Check
+            type="checkbox"
+            id="agreePrivacy"
+            name="agreePrivacy"
+            label="개인정보 수집 및 이용에 동의합니다."
+            checked={formData.agreePrivacy}
+            onChange={handleChange}
+            isInvalid={!!errors.agreePrivacy}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.agreePrivacy}
+          </Form.Control.Feedback>
+          <div className="terms-box mt-2 mb-3">
+            <p>개인정보 수집 및 이용 내용...</p>
+          </div>
+        </Form.Group>
+        
+        <div className="d-grid gap-2">
+          <Button variant="primary" onClick={handleNextStep}>
+            다음
+          </Button>
+        </div>
+      </>
+    );
+  };
+  
+  // 회원 정보 입력 단계 렌더링
+  const renderInfoStep = () => {
+    return (
+      <>
+        <h3 className="mb-4">회원 정보 입력</h3>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>아이디</Form.Label>
+          <Form.Control
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            isInvalid={!!errors.username}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.username}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>비밀번호</Form.Label>
+          <Form.Control
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            isInvalid={!!errors.password}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.password}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>비밀번호 확인</Form.Label>
+          <Form.Control
+            type="password"
+            name="passwordConfirm"
+            value={formData.passwordConfirm}
+            onChange={handleChange}
+            isInvalid={!!errors.passwordConfirm}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.passwordConfirm}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>대표자명</Form.Label>
+          <Form.Control
+            type="text"
+            name="representativeName"
+            value={formData.representativeName}
+            onChange={handleChange}
+            isInvalid={!!errors.representativeName}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.representativeName}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>사업자번호</Form.Label>
+          <Form.Control
+            type="text"
+            name="businessNumber"
+            value={formData.businessNumber}
+            onChange={handleChange}
+            isInvalid={!!errors.businessNumber}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.businessNumber}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>회사명</Form.Label>
+          <Form.Control
+            type="text"
+            name="companyName"
+            value={formData.companyName}
+            onChange={handleChange}
+            isInvalid={!!errors.companyName}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.companyName}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>회원구분</Form.Label>
+          <Form.Select
+            name="memberType"
+            value={formData.memberType}
+            onChange={handleChange}
+            isInvalid={!!errors.memberType}
+          >
+            <option value="">선택해주세요</option>
+            <option value="pharmacy">약국</option>
+            <option value="wholesale">도매</option>
+            <option value="hospital">병원</option>
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">
+            {errors.memberType}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>주소</Form.Label>
+          <Form.Control
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            isInvalid={!!errors.address}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.address}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>전화번호</Form.Label>
+          <Form.Control
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            isInvalid={!!errors.phone}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.phone}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>팩스</Form.Label>
+          <Form.Control
+            type="text"
+            name="fax"
+            value={formData.fax}
+            onChange={handleChange}
+          />
+        </Form.Group>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>이메일</Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            isInvalid={!!errors.email}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.email}
+          </Form.Control.Feedback>
+        </Form.Group>
+        
+        <div className="d-flex justify-content-between">
+          <Button variant="secondary" onClick={handlePrevStep}>
+            이전
+          </Button>
+          <Button variant="primary" type="submit">
             회원가입
           </Button>
-        </Form>
+        </div>
+      </>
+    );
+  };
+  
+  // 컴포넌트 높이 측정을 위한 useEffect
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.offsetHeight);
+    }
+  }, [step]);
+  
+  return (
+    <div className="page-container">
+      <Card className="register-box">
+        <Card.Body>
+          <ProgressBar now={step === 1 ? 50 : 100} className="mb-4" />
+          
+          <motion.div
+            initial={{ height: containerHeight }}
+            animate={{ height: "auto" }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            <div ref={containerRef}>
+              <Form onSubmit={handleSubmit}>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {step === 1 ? renderAgreementStep() : renderInfoStep()}
+                  </motion.div>
+                </AnimatePresence>
+              </Form>
+            </div>
+          </motion.div>
+        </Card.Body>
       </Card>
-    </Container>
+    </div>
   );
 };
 
-export default Register;
+export default RegisterForm;

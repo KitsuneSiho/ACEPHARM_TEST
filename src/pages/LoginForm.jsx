@@ -258,7 +258,7 @@ const LoginForm = () => {
           </Form.Group>
 
           <Button variant="primary" type="submit" className="w-100 mb-2">로그인</Button>
-          <Button variant="outline-secondary" as={Link} to="/registerTest" className="w-100">회원가입</Button>
+          <Button variant="outline-secondary" as={Link} to="/registerForm" className="w-100">회원가입</Button>
         </Form>
       </div>
     </div>
