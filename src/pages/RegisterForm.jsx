@@ -14,7 +14,7 @@ const RegisterForm = () => {
     agreePrivacy: false,
     
     // 회원 정보
-    username: "",// 유저아이디
+    userID: "",// 유저아이디
     password: "",// 비밀번호
     passwordConfirm: "",
     representativeName: "",// 대표자명
@@ -24,7 +24,9 @@ const RegisterForm = () => {
     address: "",//주소
     phone: "",
     fax: "",
-    email: ""
+    email: "",
+    accountStatus: "pending", //가입 승인 대기상태
+    userRole: "user" //유저 권한
   });
   
   // 유효성 검사 오류
@@ -93,8 +95,8 @@ const RegisterForm = () => {
     const newErrors = {};
     
     // 아이디 검사
-    if (!formData.username) {
-      newErrors.username = "아이디를 입력해주세요.";
+    if (!formData.userID) {
+      newErrors.userID = "아이디를 입력해주세요.";
     }
     
     // 비밀번호 검사
@@ -216,13 +218,13 @@ const RegisterForm = () => {
           <Form.Label>아이디</Form.Label>
           <Form.Control
             type="text"
-            name="username"
-            value={formData.username}
+            name="userID"
+            value={formData.userID}
             onChange={handleChange}
-            isInvalid={!!errors.username}
+            isInvalid={!!errors.userID}
           />
           <Form.Control.Feedback type="invalid">
-            {errors.username}
+            {errors.userID}
           </Form.Control.Feedback>
         </Form.Group>
         
