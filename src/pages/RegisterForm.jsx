@@ -59,6 +59,68 @@ const RegisterForm = () => {
       });
     }
   };
+
+  // 사업자등록번호 상태 추가
+const [businessNumberParts, setBusinessNumberParts] = useState({
+  first: "",
+  second: "",
+  third: ""
+});
+
+// 사업자등록번호 입력 핸들러
+const handleBusinessNumberChange = (e) => {
+  const { name, value } = e.target;
+  
+  // 숫자만 입력 가능하도록 검증
+  if (value !== "" && !/^\d+$/.test(value)) {
+    return;
+  }
+  
+  // 각 부분의 최대 길이 검증
+  if ((name === "first" && value.length > 3) || 
+      (name === "second" && value.length > 2) || 
+      (name === "third" && value.length > 5)) {
+    return;
+  }
+  
+  // 사업자등록번호 부분 업데이트
+  const newBusinessNumberParts = {
+    ...businessNumberParts,
+    [name]: value
+  };
+  
+  setBusinessNumberParts(newBusinessNumberParts);
+  
+  // 전체 폼데이터 업데이트
+  const combinedNumber = `${newBusinessNumberParts.first}${
+    newBusinessNumberParts.first && newBusinessNumberParts.second ? "-" : ""
+  }${newBusinessNumberParts.second}${
+    newBusinessNumberParts.second && newBusinessNumberParts.third ? "-" : ""
+  }${newBusinessNumberParts.third}`;
+  
+  setFormData({
+    ...formData,
+    businessNumber: combinedNumber
+  });
+  
+  // 오류 메시지 초기화
+  if (!!errors.businessNumber) {
+    setErrors({
+      ...errors,
+      businessNumber: null
+    });
+  }
+};
+
+// 다음 입력 필드로 자동 포커스 이동
+const handleBusinessNumberKeyUp = (e, nextField) => {
+  const { name, value } = e.target;
+  
+  if ((name === "first" && value.length === 3) || 
+      (name === "second" && value.length === 2)) {
+    document.getElementById(nextField).focus();
+  }
+};
   
   // 다음 단계로 이동
   const handleNextStep = () => {
@@ -106,6 +168,8 @@ const RegisterForm = () => {
     // 비밀번호 검사
     if (!formData.password) {
       newErrors.password = "비밀번호를 입력해주세요.";
+    } else if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(formData.password)) {
+      newErrors.password = "비밀번호는 최소 8자리이면서 1개 이상의 알파벳, 숫자, 특수문자를 포함해야합니다.";
     }
     
     // 비밀번호 확인 검사
@@ -263,7 +327,7 @@ const RegisterForm = () => {
             {errors.userID}
           </Form.Control.Feedback>
         </Form.Group>
-        
+
         <Form.Group className="mb-3">
           <Form.Label>비밀번호</Form.Label>
           <Form.Control
@@ -273,11 +337,14 @@ const RegisterForm = () => {
             onChange={handleChange}
             isInvalid={!!errors.password}
           />
+          <Form.Text className="text-muted">
+            비밀번호는 최소 8자리이면서 1개 이상의 알파벳, 숫자, 특수문자를 포함해야합니다.
+          </Form.Text>
           <Form.Control.Feedback type="invalid">
             {errors.password}
           </Form.Control.Feedback>
         </Form.Group>
-        
+
         <Form.Group className="mb-3">
           <Form.Label>비밀번호 확인</Form.Label>
           <Form.Control
@@ -308,17 +375,52 @@ const RegisterForm = () => {
         
         <Form.Group className="mb-3">
           <Form.Label>사업자번호</Form.Label>
-          <Form.Control
-            type="text"
-            name="businessNumber"
-            value={formData.businessNumber}
-            onChange={handleChange}
-            isInvalid={!!errors.businessNumber}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.businessNumber}
-          </Form.Control.Feedback>
+            <div className="d-flex" style={{ width: '100%' }}>
+              <Form.Control
+                id="business-first"
+                type="text"
+                name="first"
+                value={businessNumberParts.first}
+                onChange={handleBusinessNumberChange}
+                onKeyUp={(e) => handleBusinessNumberKeyUp(e, "business-second")}
+                maxLength={3}
+                placeholder="123"
+                className="me-2"
+                style={{ flex: '3' }}
+                isInvalid={!!errors.businessNumber}
+              />
+            <span className="align-self-center me-2">-</span>
+              <Form.Control
+                id="business-second"
+                type="text"
+                name="second"
+                value={businessNumberParts.second}
+                onChange={handleBusinessNumberChange}
+                onKeyUp={(e) => handleBusinessNumberKeyUp(e, "business-third")}
+                maxLength={2}
+                placeholder="45"
+                className="me-2"
+                style={{ flex: '2' }}
+                isInvalid={!!errors.businessNumber}
+              />
+            <span className="align-self-center me-2">-</span>
+              <Form.Control
+                id="business-third"
+                type="text"
+                name="third"
+                value={businessNumberParts.third}
+                onChange={handleBusinessNumberChange}
+                maxLength={5}
+                placeholder="67890"
+                style={{ flex: '5' }}
+                isInvalid={!!errors.businessNumber}
+              />
+            </div>
+            <Form.Control.Feedback type="invalid">
+              {errors.businessNumber}
+            </Form.Control.Feedback>
         </Form.Group>
+
         
         <Form.Group className="mb-3">
           <Form.Label>회사명</Form.Label>

@@ -16,3 +16,9 @@
   background-color: #f8f9fa;
   font-size: 0.9rem;
 }
+
+.form-label {
+  text-align: left;
+  display: block;
+  width: 100%;
+}
