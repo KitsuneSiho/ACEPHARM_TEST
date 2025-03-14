@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Form, Button, Card, ProgressBar } from "react-bootstrap";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from 'react-router-dom';
 import "./RegisterForm.css";
 
 const RegisterForm = () => {
+  // 회원가입 후 로그인페이지로 이동
+  const navigate = useNavigate();
+
   // 현재 단계 상태 (1: 약관 동의, 2: 회원 정보 입력)
   const [step, setStep] = useState(1);
   
@@ -88,7 +92,7 @@ const RegisterForm = () => {
   };
   
   // 회원가입 제출
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // 회원 정보 입력 단계 유효성 검사
@@ -151,10 +155,42 @@ const RegisterForm = () => {
       console.log("유효성 검사 오류:", newErrors);
       return;
     }
+
+    if (!formData.agreeTerms || !formData.agreePrivacy) {
+      alert("서비스 이용약관과 개인정보 처리방침에 동의해주세요.");
+      return;
+    }
+    
+    if (formData.password !== formData.passwordConfirm) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
     
     // 회원가입 요청 처리
     console.log("회원가입 데이터:", formData);
     // 여기에 API 호출 로직 추가
+    try {
+      const response = await fetch('http://localhost:8080/api/registerForm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || "회원가입에 실패했습니다.");
+  }
+  
+  alert("회원가입이 완료되었습니다. 관리자 승인 후 이용 가능합니다.");
+  navigate('/loginForm');
+  
+} catch (error) {
+  console.error('회원가입 오류:', error);
+  alert(error.message);
+}
   };
   
   // 약관 동의 단계 렌더링
